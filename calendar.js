@@ -47,3 +47,52 @@ function calendarHeading(year, month){
   $year.text(year);
   $month.text(month + 1);
 }
+
+/*
+ボタン処理関数群
+*/
+$(function() {
+  var run_status = false;
+  var start_date = null;
+  $('#submit').click(function() {
+    start_date = $('#start-date').val().trim();
+    if (start_date.match(/\d{4}.\d{2}.\d{2}/g)) {
+      $('#start-date').hide();
+      $('#start-date-label').text("開始日時："+start_date);
+      run_status = true;
+    } else {
+      alert("日付を選んでください");
+    }
+  });
+
+	$('#stop').click(function(){
+    var stop_botton = document.getElementById("stop").getAttribute("aria-pressed");
+    if (runStatusCheck() && stop_botton.indexOf("false") !== -1) {
+      $('#stop').text('RESTART');
+    } else {
+      $('#stop').text('STOP');
+    }
+	});
+
+  $('#reset').click(function() {
+    if (runStatusCheck()){
+      var btn = window.confirm("止めてもよろしいですか？");
+  		if (btn) {
+        run_status = false;
+        $('#start-date-label').text("開始日時：");
+        $('#start-date').show();
+        $('#start-date').val(start_date);
+        document.getElementById("stop").setAttribute("aria-pressed", "false");
+        $('#stop').text('STOP');
+      }
+    }
+	});
+
+  function runStatusCheck(){
+    if (!run_status) {
+      alert("カウントが始まっていません");
+      return false;
+    }
+    return true;
+  }
+});

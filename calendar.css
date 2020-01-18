@@ -5,12 +5,23 @@
 .calendar-table {
   margin: 0 auto;
 }
+
 .calendar-table .is-today {
-  color: red;
+  color: white;
+  background-color: red;
 }
+
 .calendar-table td {
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
   text-align: center;
+}
+
+.simulation-date{
+  font-size: 450%;
+}
+
+.simulation-time{
+  font-size: 1200%;
 }
