@@ -1,3 +1,17 @@
+#base {
+    width: 300px;
+    height: 300px;
+    position: relative;
+}
+
+.clock {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
 .calendar-title {
   text-align: center;
 }

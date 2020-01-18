@@ -25,7 +25,7 @@
     <div class="container">
       <div class="row">
         <!--コントローラーの記述-->
-        <div class="col-md-4">
+        <div class="col-md-4" align="left">
           <label id="start-date-label" for="bday">開始日時：</label>
           <input id="start-date" type="date" value="2020-01-19">
           <input id="start-time" type="time" value="10:00"><br><br>
@@ -34,8 +34,17 @@
           <button id="stop" class="btn btn-secondary btn-lg" data-toggle="button" aria-pressed="false" disabled>STOP</button>
           <button id="reset" class="btn btn-danger btn-lg">RESET</button>
         </div>
+
+        <!--アナログ時計の記述-->
+        <div class="col-md-4" align="clear">
+          <img src="clock_pics/dial.png" class="clock"><!--文字盤-->
+          <img src="clock_pics/hour.png" id="hour" class="clock"><!--短針-->
+          <img src="clock_pics/minute.png" id="minute" class="clock"><!--長針-->
+          <!--<img src="clock_pics/second.png" id="second" class="clock"> 秒針：早過ぎて見えない-->
+        </div>
+
         <!--カレンダー本体の記述-->
-        <div class="col-md-4 offset-4">
+        <div class="col-md-4" align="right">
           <h2 class="calendar-title"><span id="js-year"></span>年 <span id="js-month"></span>月</h2>
           <table class="calendar-table">
             <thead><tr align="center">
