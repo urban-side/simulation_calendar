@@ -76,6 +76,7 @@ $('#set').click(function() {
     $('.simulation-date').text(start_date);
     $('.simulation-time').text(start_time);
     sim_instance =  new UpdateSimulationTime(start_date, start_time);
+    clockViewUpdate();
   }
 });
 
@@ -115,7 +116,7 @@ function runStatusCheck(){
 function doStart() {
   run_status = true;
   clearInterval(date_counter);
-  date_counter = setInterval("modelInstance()", interval_time);
+  date_counter = setInterval("modelInstance()", interval_time/60);
   //timer();
 }
 
@@ -135,12 +136,13 @@ function doReset(){
   //$('#timerLabel').text('00:00:00');
   $('.simulation-date').text('YYYY-MM-DD');
   $('.simulation-time').text('HH:MM');
+  clockViewUpdate(0, 0);
 }
 
 /***************************************************************************************
 仮装時刻の関数群
 ***************************************************************************************/
-var interval_time = 10000/60;
+var interval_time = 10000;  // 1時間あたりの秒数[ms]
 
 function modelInstance() {
   sim_instance.calledConuter++;
@@ -149,8 +151,18 @@ function modelInstance() {
 }
 
 function viewUpdate() {
+  // デジタル表記の更新
   $('.simulation-date').text(yyyymmdd(sim_instance.sim_year, sim_instance.sim_month, sim_instance.sim_day));
   $('.simulation-time').text(hhmm(sim_instance.sim_hour, sim_instance.sim_minute));
+  clockViewUpdate();
+}
+
+function clockViewUpdate(hour = sim_instance.sim_hour, minute = sim_instance.sim_minute) {
+    // アナログ時計の更新
+    var hourInst = document.getElementById("hour");
+    var minuteInst = document.getElementById("minute");
+    hourInst.style.transform = "rotate("+(hour*30 + minute*0.5)+"deg)";
+    minuteInst.style.transform = "rotate("+(minute*6)+"deg)";
 }
 
 function yyyymmdd(y, m, d) {
