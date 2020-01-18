@@ -1,0 +1,16 @@
+.calendar-title {
+  text-align: center;
+}
+
+.calendar-table {
+  margin: 0 auto;
+}
+.calendar-table .is-today {
+  color: red;
+}
+.calendar-table td {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+}
