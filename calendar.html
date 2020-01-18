@@ -27,7 +27,8 @@
         <!--コントローラーの記述-->
         <div class="col-md-4">
           <label id="start-date-label" for="bday">開始日時：</label>
-          <input id="start-date" type="date" value=""><br><br>
+          <input id="start-date" type="date" value="">
+          <input id="start-time" type="time" value="10:00"><br><br>
           <button id="submit" class="btn btn-primary btn-lg">START</button><br><br>
           <button id="stop" class="btn btn-secondary btn-lg" data-toggle="button" aria-pressed="false">STOP</button><br><br>
           <button id="reset" class="btn btn-danger btn-lg">RESET</button>
@@ -44,6 +45,11 @@
             <tbody id="js-calendar-body"></tbody>
           </table>
         </div>
+
+        <div class="col-md-4" align="center">
+          <label id="start-date-label" for="bday">＜経過時間＞</label>
+          <h1 id="timerLabel">00:00:00</h1>
+        </div>
       </div>
     </div>
 
@@ -52,26 +58,11 @@
     <!--仮装時間表示の記述-->
     <div class="container">
       <div class="row">
-        <div class="col-md-8 offset-2">
-          <div class="row simulation-date" align="center">
-            <div id="simulation-month" class="col-md-2 offset-2">MM</div>
-            <div class="col-md-2">月</div>
-            <div id="simulation-day" class="col-md-2">DD</div>
-            <div class="col-md-2">日</div>
-          </div>
-        </div>
+        <div class="col-md-8 offset-2 simulation-date" align="center">MM/DD</div>
       </div>
-
       <div class="row">
-        <div class="col-md-8 offset-2">
-          <div class="row simulation-time" align="center">
-            <div id="simulation-hour" class="col-md-5">HH</div>
-            <div class="col-md-2"> : </div>
-            <div id="simulation-time-minute" class="col-md-5">MM</div>
-          </div>
-        </div>
+        <div class="col-md-8 offset-2 simulation-time" align="center">MM:DD</div>
       </div>
-
     </div>
 
     <script type="text/javascript" src="calendar.js"></script>

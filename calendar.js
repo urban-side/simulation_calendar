@@ -1,3 +1,6 @@
+/***************************************************************************************
+カレンダー表示の関数群
+***************************************************************************************/
 var $window = $(window);
 var $year = $('#js-year');
 var $month = $('#js-month');
@@ -48,51 +51,105 @@ function calendarHeading(year, month){
   $month.text(month + 1);
 }
 
-/*
-ボタン処理関数群
-*/
-$(function() {
-  var run_status = false;
-  var start_date = null;
-  $('#submit').click(function() {
-    start_date = $('#start-date').val().trim();
-    if (start_date.match(/\d{4}.\d{2}.\d{2}/g)) {
-      $('#start-date').hide();
-      $('#start-date-label').text("開始日時："+start_date);
-      run_status = true;
-    } else {
-      alert("日付を選んでください");
-    }
-  });
+/***************************************************************************************
+ボタン処理の関数群
+***************************************************************************************/
+var run_status = false;
+var start_date = null;
 
-	$('#stop').click(function(){
-    var stop_botton = document.getElementById("stop").getAttribute("aria-pressed");
-    if (runStatusCheck() && stop_botton.indexOf("false") !== -1) {
-      $('#stop').text('RESTART');
-    } else {
-      $('#stop').text('STOP');
-    }
-	});
-
-  $('#reset').click(function() {
-    if (runStatusCheck()){
-      var btn = window.confirm("止めてもよろしいですか？");
-  		if (btn) {
-        run_status = false;
-        $('#start-date-label').text("開始日時：");
-        $('#start-date').show();
-        $('#start-date').val(start_date);
-        document.getElementById("stop").setAttribute("aria-pressed", "false");
-        $('#stop').text('STOP');
-      }
-    }
-	});
-
-  function runStatusCheck(){
-    if (!run_status) {
-      alert("カウントが始まっていません");
-      return false;
-    }
-    return true;
+$('#submit').click(function() {
+  start_date = $('#start-date').val().trim();
+  start_time = $('#start-time').val().trim();
+  if (!(start_date.match(/\d{4}.\d{2}.\d{2}/g) && start_time.match(/\d{2}:\d{2}/g))) {
+    alert("日付を選んでください");
+  } else if(run_status) {
+    run_status = run_status;  // 何もしない
+  } else {
+    $('#start-date').hide();
+    $('#start-time').hide();
+    $('#start-date-label').text("開始日時："+start_date+" "+start_time);
+    doReset();
+    doStart();
   }
 });
+
+$('#stop').click(function(){
+  var stop_botton = document.getElementById("stop").getAttribute("aria-pressed");
+  if (stop_botton.indexOf("true") !== -1) {
+    $('#stop').text('STOP');
+    $('#submit').show();
+    doStart();
+  } else if (runStatusCheck()) {
+    $('#stop').text('RESTART');
+    $('#submit').hide();
+    run_status = false;
+  }
+});
+
+$('#reset').click(function() {
+  var btn = window.confirm("止めてもよろしいですか？");
+  if (btn) {
+    doReset();
+  }
+});
+
+function runStatusCheck(){
+  if (!run_status) {
+    alert("カウントが始まっていません");
+    return false;
+  }
+  return true;
+}
+
+function doStart() {
+  run_status = true;
+  timer();
+}
+
+function doReset(){
+  run_status = false;
+  time = 0;
+  $('#start-date-label').text("開始日時：");
+  $('#start-date').show();
+  $('#start-time').show();
+  $('#start-date').val(start_date);
+  $('#start-time').val(start_time);
+  document.getElementById("stop").setAttribute("aria-pressed", "false");
+  $('#submit').show();
+  $('#stop').text('STOP');
+  $('#timerLabel').text('00:00:00');
+}
+
+/***************************************************************************************
+経過時間表示の関数群
+***************************************************************************************/
+var timerLabel = document.getElementById('timerLabel');
+var time = 0;
+var min = Math.floor(time/100/60);
+var sec = Math.floor(time/100);
+var mSec = time % 100;
+
+function timer() {
+  // ステータスが動作中の場合のみ実行
+  if (run_status) {
+    setTimeout( function() {
+      time++;
+      // 分が１桁の場合は、先頭に０をつける
+      if (min < 10) min = "0" + min;
+      // 秒が６０秒以上の場合　例）89秒→29秒にする
+      if (sec >= 60) sec = sec % 60;
+      // 秒が１桁の場合は、先頭に０をつける
+      if (sec < 10) sec = "0" + sec;
+      // ミリ秒が１桁の場合は、先頭に０をつける
+      if (mSec < 10) mSec = "0" + mSec;
+      // タイマーラベルを更新
+      timerLabel.innerHTML = min + ":" + sec + ":" + mSec;
+
+      // 再びtimer()を呼び出す
+      timer();
+    }, 10);
+}
+
+/***************************************************************************************
+仮装時刻表示の関数群
+***************************************************************************************/
