@@ -10,10 +10,6 @@ var today = new Date();
 var currentYear = today.getFullYear(),
     currentMonth = today.getMonth();
 
-$window.on('load',function(){
-  calendarHeading(currentYear, currentMonth);
-  calendarBody(currentYear, currentMonth, today);
-});
 
 function calendarBody(year, month, today){
   var todayYMFlag = today.getFullYear() === year && today.getMonth() === month ? true : false; // 本日の年と月が表示されるカレンダーと同じか判定
@@ -51,38 +47,53 @@ function calendarHeading(year, month){
   $month.text(month + 1);
 }
 
+// カレンダーの読み込み
+$window.on('load',function(){
+  calendarHeading(currentYear, currentMonth);
+  calendarBody(currentYear, currentMonth, today);
+});
+
 /***************************************************************************************
 ボタン処理の関数群
 ***************************************************************************************/
 var run_status = false;
-var start_date = null;
+var start_date;
+var start_time;
+var date_counter;
+var simulation_instance;
 
-$('#submit').click(function() {
+$('#set').click(function() {
   start_date = $('#start-date').val().trim();
   start_time = $('#start-time').val().trim();
   if (!(start_date.match(/\d{4}.\d{2}.\d{2}/g) && start_time.match(/\d{2}:\d{2}/g))) {
     alert("日付を選んでください");
-  } else if(run_status) {
-    run_status = run_status;  // 何もしない
   } else {
-    $('#start-date').hide();
-    $('#start-time').hide();
-    $('#start-date-label').text("開始日時："+start_date+" "+start_time);
-    doReset();
-    doStart();
+    $('#start-date').prop('disabled', true);
+    $('#start-time').prop('disabled', true);
+    $('#submit').prop('disabled', false);
+    $('#stop').prop('disabled', false);
+    $('#set').prop('disabled', true);
+    $('.simulation-date').text(start_date);
+    $('.simulation-time').text(start_time);
+    sim_instance =  new UpdateSimulationTime(start_date, start_time);
   }
+});
+
+$('#submit').click(function() {
+  doStart();
 });
 
 $('#stop').click(function(){
   var stop_botton = document.getElementById("stop").getAttribute("aria-pressed");
   if (stop_botton.indexOf("true") !== -1) {
     $('#stop').text('STOP');
-    $('#submit').show();
+    $('#submit').prop('disabled', false);
     doStart();
-  } else if (runStatusCheck()) {
+  } else {
     $('#stop').text('RESTART');
-    $('#submit').hide();
+    $('#submit').prop('disabled', true);
     run_status = false;
+    clearInterval(date_counter);
   }
 });
 
@@ -103,57 +114,117 @@ function runStatusCheck(){
 
 function doStart() {
   run_status = true;
-  timer();
+  clearInterval(date_counter);
+  date_counter = setInterval("modelInstance()", interval_time);
+  //timer();
 }
 
 function doReset(){
+  clearInterval(date_counter);
   run_status = false;
   time = 0;
-  $('#start-date-label').text("開始日時：");
-  $('#start-date').show();
-  $('#start-time').show();
+  $('#start-date').prop('disabled', false);
+  $('#start-time').prop('disabled', false);
   $('#start-date').val(start_date);
   $('#start-time').val(start_time);
   document.getElementById("stop").setAttribute("aria-pressed", "false");
-  $('#submit').show();
+  $('#submit').prop('disabled', true);
+  $('#stop').prop('disabled', true);
+  $('#set').prop('disabled', false);
   $('#stop').text('STOP');
-  $('#timerLabel').text('00:00:00');
+  //$('#timerLabel').text('00:00:00');
+  $('.simulation-date').text('YYYY-MM-DD');
+  $('.simulation-time').text('HH:MM');
 }
 
 /***************************************************************************************
-経過時間表示の関数群
+仮装時刻の関数群
 ***************************************************************************************/
-var timerLabel = document.getElementById('timerLabel');
-var time = 0;
-var min = Math.floor(time/100/60);
-var sec = Math.floor(time/100);
-var mSec = time % 100;
+var interval_time = 10000/60;
 
-function timer() {
-  // ステータスが動作中の場合のみ実行
-  if (run_status) {
-    setTimeout( function() {
-      time++;
-      // 分が１桁の場合は、先頭に０をつける
-      if (min < 10) min = "0" + min;
-      // 秒が６０秒以上の場合　例）89秒→29秒にする
-      if (sec >= 60) sec = sec % 60;
-      // 秒が１桁の場合は、先頭に０をつける
-      if (sec < 10) sec = "0" + sec;
-      // ミリ秒が１桁の場合は、先頭に０をつける
-      if (mSec < 10) mSec = "0" + mSec;
-      // タイマーラベルを更新
-      timerLabel.innerHTML = min + ":" + sec + ":" + mSec;
+function modelInstance() {
+  sim_instance.calledConuter++;
+  sim_instance.updateTime("minute");
+  viewUpdate();
+}
 
-      // 再びtimer()を呼び出す
-      timer();
-    }, 10);
-<<<<<<< HEAD
+function viewUpdate() {
+  $('.simulation-date').text(yyyymmdd(sim_instance.sim_year, sim_instance.sim_month, sim_instance.sim_day));
+  $('.simulation-time').text(hhmm(sim_instance.sim_hour, sim_instance.sim_minute));
+}
+
+function yyyymmdd(y, m, d) {
+    var y0 = ('000' + y).slice(-4);
+    var m0 = ('0' + m+1).slice(-2);
+    var d0 = ('0' + d).slice(-2);
+    return y0+"-"+m0+"-"+d0;
+}
+
+function hhmm(h, m){
+  var h0 = ('000' + h).slice(-2);
+  var m0 = ('0' + m).slice(-2);
+  return h0+":"+m0;
+}
+
+class UpdateSimulationTime {
+  constructor(startDate, startTime) {
+    this.sim_year = startDate.substr(0, 4)|0;
+    this.sim_month = startDate.substr(6, 2)|0;
+    this.sim_day = startDate.substr(-2)|0;
+    this.sim_hour = startTime.substr(0, 2)|0;
+    this.sim_minute = startTime.substr(-2)|0;
   }
-=======
->>>>>>> bad465c74476c6df647198b0df84177d7d793622
-}
 
-/***************************************************************************************
-仮装時刻表示の関数群
-***************************************************************************************/
+  updateTime(category){
+    switch (category) {
+      case "hour":
+        if (this.sim_hour == 23) {
+          this.sim_hour = 0;
+          this.updateDate("day");
+        } else {
+          this.sim_hour ++;
+        }
+        break;
+      case "minute":
+        if (this.sim_minute == 59) {
+          this.sim_minute = 0;
+          this.updateTime("hour");
+        } else {
+          this.sim_minute ++;
+        }
+        break;
+      default:
+        alert("! error ! category = "+category);
+        clearInterval(date_counter);
+        break;
+    }
+  }
+
+  updateDate(category){
+    switch (category) {
+      case "year":
+        this.sim_year ++;
+        break;
+      case "month":
+        if (this.sim_month == 12) {
+          this.sim_month = 1;
+          this.updateTime("year");
+        } else {
+          this.sim_month ++;
+        }
+        break;
+      case "day":
+        if (this.sim_day == 30) {
+          this.sim_day = 1;
+          this.updateTime("month");
+        } else {
+          this.sim_day ++;
+        }
+        break;
+      default:
+        alert("! error ! category = "+category);
+        clearInterval(date_counter);
+        break;
+    }
+  }
+}

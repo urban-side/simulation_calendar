@@ -4,6 +4,10 @@
 
 .calendar-table {
   margin: 0 auto;
+  font-size: 200%;
+  font-family: monospace;
+  width: 100%;
+  height: 100%;
 }
 
 .calendar-table .is-today {
@@ -20,8 +24,10 @@
 
 .simulation-date{
   font-size: 450%;
+  font-family: monospace;
 }
 
 .simulation-time{
-  font-size: 1200%;
+  font-size: 1500%;
+  font-family: monospace;
 }

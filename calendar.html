@@ -27,14 +27,15 @@
         <!--コントローラーの記述-->
         <div class="col-md-4">
           <label id="start-date-label" for="bday">開始日時：</label>
-          <input id="start-date" type="date" value="">
+          <input id="start-date" type="date" value="2020-01-19">
           <input id="start-time" type="time" value="10:00"><br><br>
-          <button id="submit" class="btn btn-primary btn-lg">START</button><br><br>
-          <button id="stop" class="btn btn-secondary btn-lg" data-toggle="button" aria-pressed="false">STOP</button><br><br>
+          <button id="set" class="btn btn-primary btn-lg">SET</button>
+          <button id="submit" class="btn btn-primary btn-lg" disabled>START</button><br><br>
+          <button id="stop" class="btn btn-secondary btn-lg" data-toggle="button" aria-pressed="false" disabled>STOP</button>
           <button id="reset" class="btn btn-danger btn-lg">RESET</button>
         </div>
         <!--カレンダー本体の記述-->
-        <div class="col-md-4">
+        <div class="col-md-4 offset-4">
           <h2 class="calendar-title"><span id="js-year"></span>年 <span id="js-month"></span>月</h2>
           <table class="calendar-table">
             <thead><tr align="center">
@@ -45,11 +46,12 @@
             <tbody id="js-calendar-body"></tbody>
           </table>
         </div>
-
+        <!--
         <div class="col-md-4" align="center">
           <label id="start-date-label" for="bday">＜経過時間＞</label>
           <h1 id="timerLabel">00:00:00</h1>
         </div>
+        -->
       </div>
     </div>
 
@@ -58,10 +60,10 @@
     <!--仮装時間表示の記述-->
     <div class="container">
       <div class="row">
-        <div class="col-md-8 offset-2 simulation-date" align="center">MM/DD</div>
+        <div class="col-md-8 offset-2 simulation-date" align="center">YYYY-MM-DD</div>
       </div>
       <div class="row">
-        <div class="col-md-8 offset-2 simulation-time" align="center">MM:DD</div>
+        <div class="col-md-8 offset-2 simulation-time" align="center">HH:MM</div>
       </div>
     </div>
 
