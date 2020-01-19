@@ -193,7 +193,7 @@ function doStartInstance(){
 仮装時刻の関数群
 ***************************************************************************************/
 var interval_time = 60000;  // 1時間あたりの秒数[ms]（営業時間中）
-var interval_time_out = 10000;  // 1時間あたりの秒数[ms]（営業時間外）
+var interval_time_out = 7500;  // 1時間あたりの秒数[ms]（営業時間外）
 var update_date = false;   // 日が変わった瞬間を知らせるフラグ
     update_month = false;   // 月が変わった瞬間を知らせるフラグ
 
