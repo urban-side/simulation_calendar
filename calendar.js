@@ -61,11 +61,12 @@ class Calendar {
     $('#js-year').text(start_date.substr(0, 4)|0);
     $('#js-month').text(start_date.substr(5, 2)|0);
     today = new Date();
-    cldr = new Calendar(start_date.substr(0, 4)|0, (start_date.substr(5, 2)|0)-1, today);
-    $('.is-today').prop('class', 'cldr-date');
-    $('.cldr-date').each(function(element){
-      if ($(this).text() == start_date.substr(-2)|0) {
-        $(this).prop('class', 'cldr-date is-today');
+    cldr = new Calendar(start_date.substr(0, 4)|0, (start_date.substr(5, 2)|0)-1);
+    $('.is-today').removeClass('is-today');
+    $('td').each(function(index, element){
+      if ($(element).text() == sim_instance.sim_day) {
+        $(element).addClass('is-today');
+        return false;
       }
     });
   }
@@ -102,7 +103,7 @@ $( function() {
     start_date = $('#start-date').val().trim();
     start_time = $('#start-time').val().trim();
     if (!(start_date.match(/\d{4}.\d{2}.\d{2}/g) && start_time.match(/\d{2}:\d{2}/g))) {
-      alert("日付を選んでください");
+      alert("日付・時刻を選んでください");
     } else {
       $('#start-date').prop('disabled', true);
       $('#start-time').prop('disabled', true);
@@ -153,9 +154,7 @@ $( function() {
   function doStart() {
     run_status = true;
     $('#stop').prop('disabled', false);
-    clearInterval(date_counter);
-    date_counter = setInterval("modelInstance()", interval_time/60);
-    //timer();
+    doStartInstance();
   }
 
   function doReset(){
@@ -180,10 +179,20 @@ $( function() {
 
 });
 
+function doStartInstance(){
+  clearInterval(date_counter);
+  if (sim_instance.sim_hour < 10 || sim_instance.sim_hour > 17) {
+    date_counter = setInterval("modelInstance()", interval_time_out/60);
+  } else {
+    date_counter = setInterval("modelInstance()", interval_time/60);
+  }
+}
+
 /***************************************************************************************
 仮装時刻の関数群
 ***************************************************************************************/
-var interval_time = 10000;  // 1時間あたりの秒数[ms]
+var interval_time = 60000;  // 1時間あたりの秒数[ms]（営業時間中）
+var interval_time_out = 7500;  // 1時間あたりの秒数[ms]（営業時間外）
 var update_date = false;   // 日が変わった瞬間を知らせるフラグ
     update_month = false;   // 月が変わった瞬間を知らせるフラグ
 
@@ -219,8 +228,10 @@ function clockViewUpdate(hour = sim_instance.sim_hour, minute = sim_instance.sim
     // アナログ時計の更新
     var hourInst = document.getElementById("hour");
     var minuteInst = document.getElementById("minute");
+    //var second = document.getElementById("second");
     hourInst.style.transform = "rotate("+(hour*30 + minute*0.5)+"deg)";
     minuteInst.style.transform = "rotate("+(minute*6)+"deg)";
+    //second.style.transform = "rotate("+(time.getSeconds()*6)+"deg)";
 }
 
 function yyyymmdd(y, m, d) {
@@ -254,6 +265,12 @@ class UpdateSimulationTime {
           this.updateDate("day");
         } else {
           this.sim_hour ++;
+        }
+        // 営業時間かどうかで時間の進み具合を変える
+        if (this.sim_hour == 18) {
+          doStartInstance(); // 営業時間外は高速化（翌10時までを2分で）
+        } else if (this.sim_hour == 10) {
+          doStartInstance();  // 営業時間内は通常通り（一時間1分）
         }
         break;
       case "minute":
