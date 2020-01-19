@@ -47,9 +47,10 @@ class Calendar {
   }
 
   dayUpdate(){
-    $('td').each( function(index, element){
+    $('.cldr-date').each( function(index, element){
       if ($(element).hasClass('is-today')) {
         $(element).removeClass('is-today');
+        console.log('@dayUpdate', element, $(element).next());
         $(element).next().addClass('is-today');
         return false;
       }
@@ -63,8 +64,8 @@ class Calendar {
     today = new Date();
     cldr = new Calendar(start_date.substr(0, 4)|0, (start_date.substr(5, 2)|0)-1);
     $('.is-today').removeClass('is-today');
-    $('td').each(function(index, element){
-      if ($(element).text() == sim_instance.sim_day) {
+    $('.cldr-date').each(function(index, element){
+      if ($(element).text() == start_date.substr(-2)-0) {
         $(element).addClass('is-today');
         return false;
       }
@@ -192,29 +193,32 @@ function doStartInstance(){
 仮装時刻の関数群
 ***************************************************************************************/
 var interval_time = 60000;  // 1時間あたりの秒数[ms]（営業時間中）
-var interval_time_out = 7500;  // 1時間あたりの秒数[ms]（営業時間外）
+var interval_time_out = 10000;  // 1時間あたりの秒数[ms]（営業時間外）
 var update_date = false;   // 日が変わった瞬間を知らせるフラグ
     update_month = false;   // 月が変わった瞬間を知らせるフラグ
 
 function modelInstance() {
+  console.log(sim_instance.sim_month,sim_instance.sim_day,sim_instance.sim_hour,sim_instance.sim_minute);
+  console.log($('.is-today'));
   sim_instance.updateTime("minute");
   degitalViewUpdate();
   clockViewUpdate();
+  if (update_date){
+    update_date = false;
+    cldr.dayUpdate();
+  }
   if (update_month) {
     update_month = false;
     cldr = new Calendar(sim_instance.sim_year, sim_instance.sim_month-1, today);
-    $('.is-today').prop('class', 'cldr-date');
+    $('.is-today').removeClass('is-today');
     $('.cldr-date').each( function(i,element){
-      if($(element).text().match(/[1１]/g)) {
-        $(element).prop('class', 'cldr-date is-today');
+      if($(element).text().match(/[1１]/g) == "1") {
+        $(element).addClass('is-today');
         $('#js-year').text(sim_instance.sim_year);
         $('#js-month').text(sim_instance.sim_month);
         return false;
       }
     });
-  } else if (update_date){
-    update_date = false;
-    cldr.dayUpdate();
   }
 }
 
@@ -266,12 +270,6 @@ class UpdateSimulationTime {
         } else {
           this.sim_hour ++;
         }
-        // 営業時間かどうかで時間の進み具合を変える
-        if (this.sim_hour == 18) {
-          doStartInstance(); // 営業時間外は高速化（翌10時までを2分で）
-        } else if (this.sim_hour == 10) {
-          doStartInstance();  // 営業時間内は通常通り（一時間1分）
-        }
         break;
       case "minute":
         if (this.sim_minute == 59) {
@@ -296,7 +294,7 @@ class UpdateSimulationTime {
       case "month":
         if (this.sim_month == 12) {
           this.sim_month = 1;
-          this.updateTime("year");
+          this.updateDate("year");
         } else {
           this.sim_month ++;
         }
