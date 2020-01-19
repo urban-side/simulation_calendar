@@ -209,6 +209,10 @@ var update_date = false;   // 日が変わった瞬間を知らせるフラグ
 // controller関数（こいつが色々指示を出す）
 function modelInstance() {
   sim_instance.updateTime("minute");
+  viewUpdate();
+}
+
+function viewUpdate() {
   degitalViewUpdate();
   clockViewUpdate();
   if (update_date){
@@ -279,9 +283,11 @@ class UpdateSimulationTime {
           this.sim_hour ++;
           if (this.sim_hour == 18) {
             this.outdayTime = true;
+            viewUpdate();
             doStartInstance(this.outdayTime);
           } else if (this.sim_hour == 10) {
             this.outdayTime = false;
+            viewUpdate();
             doStartInstance(this.outdayTime);
           }
         }
