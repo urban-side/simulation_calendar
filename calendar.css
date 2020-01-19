@@ -1,12 +1,12 @@
 #base {
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height:250px;
     position: relative;
 }
 
 .clock {
-  width: 300px;
-  height: 300px;
+  width: 250px;
+  height: 250px;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -18,10 +18,10 @@
 
 .calendar-table {
   margin: 0 auto;
-  font-size: 200%;
+  font-size: 150%;
   font-family: monospace;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
 }
 
 .calendar-table .is-today {

@@ -46,32 +46,40 @@ class Calendar {
     $tbody.html(object.tableBody);
   }
 
+  // カレンダーの次の日にセット
   dayUpdate(){
-    $('.cldr-date').each( function(index, element){
-      if ($(element).hasClass('is-today')) {
-        $(element).removeClass('is-today');
-        console.log('@dayUpdate', element, $(element).next());
-        $(element).next().addClass('is-today');
-        return false;
-      }
-    });
+    var today = sim_instance.sim_day;
+    todayHighlightUpdate(undefined, undefined, today);
+  }
+
+  // カレンダーを次の月に更新し一日にセット
+  monthUpdate(){
+    cldr = new Calendar(sim_instance.sim_year, sim_instance.sim_month-1, today);
+    todayHighlightUpdate(undefined, undefined, 1);
   }
 
   // シミュレーションを開始した（setした）時点の時間に戻す
   clearDate(){
-    $('#js-year').text(start_date.substr(0, 4)|0);
-    $('#js-month').text(start_date.substr(5, 2)|0);
+    var start_Y = start_date.substr(0, 4)|0;
+    var start_M = start_date.substr(5, 2)|0;
+    var start_D = start_date.substr(-2)|0;
     today = new Date();
-    cldr = new Calendar(start_date.substr(0, 4)|0, (start_date.substr(5, 2)|0)-1);
-    $('.is-today').removeClass('is-today');
-    $('.cldr-date').each(function(index, element){
-      if ($(element).text() == start_date.substr(-2)-0) {
-        $(element).addClass('is-today');
-        return false;
-      }
-    });
+    cldr = new Calendar(start_Y, start_M-1);
+    todayHighlightUpdate(start_Y, start_M, start_D);
   }
 
+}
+
+function todayHighlightUpdate(year = $('#js-year').text(), month = $('#js-month').text(), date){
+  $('#js-year').text(year);
+  $('#js-month').text(month);
+  $('.is-today').removeClass('is-today');
+  $('.cldr-date').each(function(index, element){
+    if ($(element).text() == date) {
+      $(element).addClass('is-today');
+      return false;
+    }
+  });
 }
 
 function calendarHeading(year, month){
@@ -180,9 +188,9 @@ $( function() {
 
 });
 
-function doStartInstance(){
+function doStartInstance(out_dayTime){
   clearInterval(date_counter);
-  if (sim_instance.sim_hour < 10 || sim_instance.sim_hour > 17) {
+  if (out_dayTime) {
     date_counter = setInterval("modelInstance()", interval_time_out/60);
   } else {
     date_counter = setInterval("modelInstance()", interval_time/60);
@@ -198,8 +206,6 @@ var update_date = false;   // 日が変わった瞬間を知らせるフラグ
     update_month = false;   // 月が変わった瞬間を知らせるフラグ
 
 function modelInstance() {
-  console.log(sim_instance.sim_month,sim_instance.sim_day,sim_instance.sim_hour,sim_instance.sim_minute);
-  console.log($('.is-today'));
   sim_instance.updateTime("minute");
   degitalViewUpdate();
   clockViewUpdate();
@@ -209,16 +215,7 @@ function modelInstance() {
   }
   if (update_month) {
     update_month = false;
-    cldr = new Calendar(sim_instance.sim_year, sim_instance.sim_month-1, today);
-    $('.is-today').removeClass('is-today');
-    $('.cldr-date').each( function(i,element){
-      if($(element).text().match(/[1１]/g) == "1") {
-        $(element).addClass('is-today');
-        $('#js-year').text(sim_instance.sim_year);
-        $('#js-month').text(sim_instance.sim_month);
-        return false;
-      }
-    });
+    cldr.monthUpdate();
   }
 }
 
@@ -269,6 +266,11 @@ class UpdateSimulationTime {
           this.updateDate("day");
         } else {
           this.sim_hour ++;
+          if (this.hour == 18) {
+
+          } else if (this.hour == 10) {
+
+          }
         }
         break;
       case "minute":
