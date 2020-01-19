@@ -47,7 +47,13 @@ class Calendar {
   }
 
   dayUpdate(){
-
+    $('td').each( function(index, element){
+      if ($(element).hasClass('is-today')) {
+        $(element).removeClass('is-today');
+        $(element).next().addClass('is-today');
+        return false;
+      }
+    });
   }
 
   // シミュレーションを開始した（setした）時点の時間に戻す
@@ -178,7 +184,8 @@ $( function() {
 仮装時刻の関数群
 ***************************************************************************************/
 var interval_time = 10000;  // 1時間あたりの秒数[ms]
-var update_month = false;   // 月が変わった瞬間を知らせるフラグ
+var update_date = false;   // 日が変わった瞬間を知らせるフラグ
+    update_month = false;   // 月が変わった瞬間を知らせるフラグ
 
 function modelInstance() {
   sim_instance.updateTime("minute");
@@ -196,7 +203,8 @@ function modelInstance() {
         return false;
       }
     });
-  } else {
+  } else if (update_date){
+    update_date = false;
     cldr.dayUpdate();
   }
 }
@@ -242,6 +250,7 @@ class UpdateSimulationTime {
       case "hour":
         if (this.sim_hour == 23) {
           this.sim_hour = 0;
+          update_date = true;
           this.updateDate("day");
         } else {
           this.sim_hour ++;
