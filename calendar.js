@@ -163,7 +163,7 @@ $( function() {
   function doStart() {
     run_status = true;
     $('#stop').prop('disabled', false);
-    doStartInstance();
+    doStartInstance(sim_instance.outdayTime);
   }
 
   function doReset(){
@@ -190,6 +190,7 @@ $( function() {
 
 function doStartInstance(out_dayTime){
   clearInterval(date_counter);
+  console.log(out_dayTime);
   if (out_dayTime) {
     date_counter = setInterval("modelInstance()", interval_time_out/60);
   } else {
@@ -205,6 +206,7 @@ var interval_time_out = 7500;  // 1時間あたりの秒数[ms]（営業時間�
 var update_date = false;   // 日が変わった瞬間を知らせるフラグ
     update_month = false;   // 月が変わった瞬間を知らせるフラグ
 
+// controller関数（こいつが色々指示を出す）
 function modelInstance() {
   sim_instance.updateTime("minute");
   degitalViewUpdate();
@@ -219,12 +221,14 @@ function modelInstance() {
   }
 }
 
+// 画面下部のデジタル表記を更新
 function degitalViewUpdate() {
   // デジタル表記の更新
   $('.simulation-date').text(yyyymmdd(sim_instance.sim_year, sim_instance.sim_month, sim_instance.sim_day));
   $('.simulation-time').text(hhmm(sim_instance.sim_hour, sim_instance.sim_minute));
 }
 
+// アナログ時計の表示を更新（参考：http://myprogramming.hatenablog.com/entry/2017/06/25/195248）
 function clockViewUpdate(hour = sim_instance.sim_hour, minute = sim_instance.sim_minute) {
     // アナログ時計の更新
     var hourInst = document.getElementById("hour");
@@ -235,6 +239,7 @@ function clockViewUpdate(hour = sim_instance.sim_hour, minute = sim_instance.sim
     //second.style.transform = "rotate("+(time.getSeconds()*6)+"deg)";
 }
 
+// 表示用の桁合わせ関数
 function yyyymmdd(y, m, d) {
     var y0 = ('000' + y).slice(-4);
     var m0 = ('0' + m).slice(-2);
@@ -248,6 +253,7 @@ function hhmm(h, m){
   return h0+":"+m0;
 }
 
+// シミュレーションの仮想時刻を保持するクラス
 class UpdateSimulationTime {
   constructor(startDate, startTime) {
     this.sim_year = startDate.substr(0, 4)|0;
@@ -255,6 +261,11 @@ class UpdateSimulationTime {
     this.sim_day = startDate.substr(-2)|0;
     this.sim_hour = startTime.substr(0, 2)|0;
     this.sim_minute = startTime.substr(-2)|0;
+    if (this.sim_hour >= 18 || (this.sim_hour < 10)) {
+      this.outdayTime = true;
+    } else {
+      this.outdayTime = false;
+    }
   }
 
   updateTime(category){
@@ -266,10 +277,12 @@ class UpdateSimulationTime {
           this.updateDate("day");
         } else {
           this.sim_hour ++;
-          if (this.hour == 18) {
-
-          } else if (this.hour == 10) {
-
+          if (this.sim_hour == 18) {
+            this.outdayTime = true;
+            doStartInstance(this.outdayTime);
+          } else if (this.sim_hour == 10) {
+            this.outdayTime = false;
+            doStartInstance(this.outdayTime);
           }
         }
         break;
