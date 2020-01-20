@@ -1,15 +1,35 @@
-#base {
-    width: 250px;
-    height:250px;
+@media (max-width: 350px) {
+  #base {
+    width: 270px;
+    height: 270px;
     position: relative;
+  }
+  .clock {
+    width: 270px;
+    height: 270px;
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    margin:0;
+    padding:0;
+  }
 }
 
+#base {
+  width: 270px;
+  height: 270px;
+  position: relative;
+}
 .clock {
-  width: 250px;
-  height: 250px;
+  width: 270px;
+  height: 270px;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  margin:0;
+  padding:0;
 }
 
 .calendar-title {
@@ -37,11 +57,9 @@
 }
 
 .simulation-date{
-  font-size: 450%;
   font-family: monospace;
 }
 
 .simulation-time{
-  font-size: 1500%;
   font-family: monospace;
 }

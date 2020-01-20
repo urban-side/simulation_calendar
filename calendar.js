@@ -70,6 +70,7 @@ class Calendar {
 
 }
 
+// カレンダーの赤いハイライト更新
 function todayHighlightUpdate(year = $('#js-year').text(), month = $('#js-month').text(), date){
   $('#js-year').text(year);
   $('#js-month').text(month);
@@ -95,6 +96,7 @@ function makecalerderInstance() {
 $window.on('load',function(){
   calendarHeading(currentYear, currentMonth);
   makecalerderInstance();
+  $('#start-date').val(yyyymmdd(currentYear, currentMonth+1, today.getDate()));
 });
 
 /***************************************************************************************
@@ -114,16 +116,7 @@ $( function() {
     if (!(start_date.match(/\d{4}.\d{2}.\d{2}/g) && start_time.match(/\d{2}:\d{2}/g))) {
       alert("日付・時刻を選んでください");
     } else {
-      $('#start-date').prop('disabled', true);
-      $('#start-time').prop('disabled', true);
-      $('#submit').prop('disabled', false);
-      $('#stop').prop('disabled', true);
-      $('#set').prop('disabled', true);
-      $('.simulation-date').text(start_date);
-      $('.simulation-time').text(start_time);
-      sim_instance =  new UpdateSimulationTime(start_date, start_time);
-      cldr.clearDate();
-      clockViewUpdate();
+      doSet();
     }
   });
 
@@ -160,6 +153,19 @@ $( function() {
     return true;
   }
 
+  function doSet() {
+    $('#start-date').prop('disabled', true);
+    $('#start-time').prop('disabled', true);
+    $('#submit').prop('disabled', false);
+    $('#stop').prop('disabled', true);
+    $('#set').prop('disabled', true);
+    $('.simulation-date').text(start_date);
+    $('.simulation-time').text(start_time);
+    sim_instance =  new UpdateSimulationTime(start_date, start_time);
+    cldr.clearDate();
+    clockViewUpdate();
+  }
+
   function doStart() {
     run_status = true;
     $('#stop').prop('disabled', false);
@@ -190,7 +196,6 @@ $( function() {
 
 function doStartInstance(out_dayTime){
   clearInterval(date_counter);
-  console.log(out_dayTime);
   if (out_dayTime) {
     date_counter = setInterval("modelInstance()", interval_time_out/60);
   } else {
@@ -235,12 +240,15 @@ function degitalViewUpdate() {
 // アナログ時計の表示を更新（参考：http://myprogramming.hatenablog.com/entry/2017/06/25/195248）
 function clockViewUpdate(hour = sim_instance.sim_hour, minute = sim_instance.sim_minute) {
     // アナログ時計の更新
-    var hourInst = document.getElementById("hour");
+    /*var hourInst = document.getElementById("hour");
     var minuteInst = document.getElementById("minute");
     //var second = document.getElementById("second");
     hourInst.style.transform = "rotate("+(hour*30 + minute*0.5)+"deg)";
     minuteInst.style.transform = "rotate("+(minute*6)+"deg)";
-    //second.style.transform = "rotate("+(time.getSeconds()*6)+"deg)";
+    //second.style.transform = "rotate("+(time.getSeconds()*6)+"deg)";*/
+    $("#hour").css("transform", "rotate("+(hour*30 + minute*0.5)+"deg)");
+    $("#minute").css("transform", "rotate("+(minute*6)+"deg)");
+    // $('#second').css("transform", "rotate("+(time.getSeconds()*6)+"deg)");
 }
 
 // 表示用の桁合わせ関数

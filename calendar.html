@@ -14,7 +14,7 @@
 
   <body>
     <!--ナビバー記述-->
-    <nav class="navbar navbar-default navber-fixed-top">
+    <nav class="navbar navbar-light bg-light">
 		  <div class="navbar-header">
         <a class="navbar-brand">Simulation Calendar</a>
 		  </div>
@@ -25,18 +25,27 @@
     <div class="container">
       <div class="row">
         <!--コントローラーの記述-->
-        <div class="col-md-4" align="left">
-          <label id="start-date-label" for="bday">開始日時：</label>
-          <input id="start-date" type="date" value="">
-          <input id="start-time" type="time" value=""><br><br>
-          <button id="set" class="btn btn-primary btn-lg">SET</button>
-          <button id="submit" class="btn btn-primary btn-lg" disabled>START</button><br><br>
-          <button id="stop" class="btn btn-secondary btn-lg" data-toggle="button" aria-pressed="false" disabled>STOP</button>
-          <button id="reset" class="btn btn-danger btn-lg">RESET</button>
+        <div class="col-md-6 col-lg align-self-center">
+          <div class="row boder">
+            <div class="col mx-auto" style="text-align:center">シミュレーション開始日時</div><div class="w-100"></div>
+            <input id="start-date" class="col-7" type="date" value="" placeholder="START Date">
+            <input id="start-time" class="col-5" type="time" value="00:00" placeholder="START Time">
+          </div>
+          <br>
+          <div class="row">
+            <button id="set" class="col-sm-5 btn btn-warning btn-lg mx-auto">SET</button>
+            <button id="submit" class="col-sm-5 btn btn-primary btn-lg mx-auto" disabled>START</button>
+          </div>
+          <br>
+          <div class="row">
+            <button id="stop" class="col-sm-5 btn btn-secondary btn-lg mx-auto" data-toggle="button" aria-pressed="false" disabled>STOP</button>
+            <button id="reset" class="col-sm-5 btn btn-danger btn-lg mx-auto">RESET</button>
+          </div>
+          <br>
         </div>
 
         <!--アナログ時計の記述-->
-        <div id="base" class="col-md-4" align="clear">
+        <div id="base" class="col-md-6 col-lg mx-auto">
           <img src="clock_pics/dial.png" class="clock"><!--文字盤-->
           <img src="clock_pics/hour.png" id="hour" class="clock"><!--短針-->
           <img src="clock_pics/minute.png" id="minute" class="clock"><!--長針-->
@@ -44,7 +53,8 @@
         </div>
 
         <!--カレンダー本体の記述-->
-        <div class="col-md-4" align="right">
+        <div class="col-md-10 col-lg mx-auto">
+          <br>
           <h2 class="calendar-title"><span id="js-year"></span>年 <span id="js-month"></span>月</h2>
           <table class="calendar-table">
             <thead><tr align="center">
@@ -64,15 +74,15 @@
       </div>
     </div>
 
-    <br><br><br>
+    <br>
 
     <!--仮装時間表示の記述-->
-    <div class="container">
+    <div class="container border">
       <div class="row">
-        <div class="col-md-8 offset-2 simulation-date" align="center">YYYY-MM-DD</div>
+        <div class="col simulation-date mx-auto" align="center">YYYY-MM-DD</div>
       </div>
-      <div class="row">
-        <div class="col-md-8 offset-2 simulation-time" align="center">HH:MM</div>
+      <div class="row border">
+        <div class="col simulation-time mx-auto" align="center">HH:MM</div>
       </div>
     </div>
 
