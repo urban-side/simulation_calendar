@@ -23,10 +23,11 @@
     <br>
 
     <div class="container">
+      
       <div class="row">
         <!--コントローラーの記述-->
         <div class="col-md-6 col-lg align-self-center">
-          <div class="row boder">
+          <div class="row">
             <div class="col mx-auto" style="text-align:center">シミュレーション開始日時</div><div class="w-100"></div>
             <input id="start-date" class="col-7" type="date" value="" placeholder="START Date">
             <input id="start-time" class="col-5" type="time" value="00:00" placeholder="START Time">
@@ -53,7 +54,7 @@
         </div>
 
         <!--カレンダー本体の記述-->
-        <div class="col-md-10 col-lg mx-auto">
+        <div class="col-md-6 col-lg mx-auto">
           <br>
           <h2 class="calendar-title"><span id="js-year"></span>年 <span id="js-month"></span>月</h2>
           <table class="calendar-table">
@@ -65,25 +66,15 @@
             <tbody id="js-calendar-body"></tbody>
           </table>
         </div>
-        <!--
-        <div class="col-md-4" align="center">
-          <label id="start-date-label" for="bday">＜経過時間＞</label>
-          <h1 id="timerLabel">00:00:00</h1>
+
+      <!--仮装時間表示の記述-->
+      <div class="col-md-6 col-lg-12"><br><br><br>
+        <div class="row">
+          <div class="col-lg-4 simulation-date mx-auto align-self-center" align="center">YYYY-MM-DD</div>
+          <div class="col-lg-8 simulation-time mx-auto" align="center">HH:MM</div>
         </div>
-        -->
       </div>
-    </div>
 
-    <br>
-
-    <!--仮装時間表示の記述-->
-    <div class="container border">
-      <div class="row">
-        <div class="col simulation-date mx-auto" align="center">YYYY-MM-DD</div>
-      </div>
-      <div class="row border">
-        <div class="col simulation-time mx-auto" align="center">HH:MM</div>
-      </div>
     </div>
 
     <script type="text/javascript" src="calendar.js"></script>
