@@ -4,8 +4,9 @@
   <head>
     <meta charset="UTF-8">
     <title>カレンダー</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="calendar.css">
+    <link rel="stylesheet" type="text/css" href="calendar.css">
   </head>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -23,14 +24,14 @@
     <br>
 
     <div class="container">
-      
+
       <div class="row">
         <!--コントローラーの記述-->
         <div class="col-md-6 col-lg align-self-center">
           <div class="row">
             <div class="col mx-auto" style="text-align:center">シミュレーション開始日時</div><div class="w-100"></div>
             <input id="start-date" class="col-7" type="date" value="" placeholder="START Date">
-            <input id="start-time" class="col-5" type="time" value="00:00" placeholder="START Time">
+            <input id="start-time" class="col-5" type="time" value="10:00" placeholder="START Time">
           </div>
           <br>
           <div class="row">
@@ -76,6 +77,32 @@
       </div>
 
     </div>
+
+    <p>画面サイズ：<span id="ScrSize"></span></p>
+    <p>ウィンドウサイズ：<span id="WinSize"></span></p>
+    <script type="text/javascript">
+    //画面サイズの取得
+    getScreenSize();
+    //ウィンドウサイズの取得
+    getWindowSize();
+
+    //画面サイズを取得する
+    function getScreenSize() {
+      var s = "横幅 = " + window.parent.screen.width + " / 高さ = " + window.parent.screen.height;
+      document.getElementById("ScrSize").innerHTML = s;
+    }
+
+    //ウィンドウサイズを取得する
+    function getWindowSize() {
+      var sW,sH,s;
+      sW = window.innerWidth;
+      sH = window.innerHeight;
+
+      s = "横幅 = " + sW + " / 高さ = " + sH;
+
+      document.getElementById("WinSize").innerHTML = s;
+    }
+    </script>
 
     <script type="text/javascript" src="calendar.js"></script>
   </body>
