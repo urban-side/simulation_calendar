@@ -54,7 +54,7 @@ class Calendar {
 
   // カレンダーを次の月に更新し一日にセット
   monthUpdate(){
-    cldr = new Calendar(sim_instance.sim_year, sim_instance.sim_month-1, today);
+    cldr = new Calendar(sim_instance.sim_year, sim_instance.sim_month-1);
     todayHighlightUpdate(sim_instance.sim_year, sim_instance.sim_month, 1);
   }
 
