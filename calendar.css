@@ -48,6 +48,12 @@
   font-family: monospace;
 }
 
+@media (max-width:414px)) {
+  body {
+    max-width: 350px;
+  }
+}
+
 @media (min-width:1024px) {
   .simulation-time{
     font-size: 15vmax;

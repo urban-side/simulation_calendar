@@ -55,7 +55,7 @@ class Calendar {
   // カレンダーを次の月に更新し一日にセット
   monthUpdate(){
     cldr = new Calendar(sim_instance.sim_year, sim_instance.sim_month-1, today);
-    todayHighlightUpdate(undefined, undefined, 1);
+    todayHighlightUpdate(sim_instance.sim_year, sim_instance.sim_month, 1);
   }
 
   // シミュレーションを開始した（setした）時点の時間に戻す
@@ -72,8 +72,6 @@ class Calendar {
 
 // カレンダーの赤いハイライト更新
 function todayHighlightUpdate(year = $('#js-year').text(), month = $('#js-month').text(), date){
-  $('#js-year').text(year);
-  $('#js-month').text(month);
   $('.is-today').removeClass('is-today');
   $('.cldr-date').each(function(index, element){
     if ($(element).text() == date) {
@@ -81,6 +79,8 @@ function todayHighlightUpdate(year = $('#js-year').text(), month = $('#js-month'
       return false;
     }
   });
+  $('#js-year').text(year);
+  $('#js-month').text(month);
 }
 
 function calendarHeading(year, month){
@@ -92,11 +92,18 @@ function makecalerderInstance() {
   cldr = new Calendar(currentYear, currentMonth, today);
 }
 
-// カレンダーの読み込み
+// 起動時の処理
 $window.on('load',function(){
   calendarHeading(currentYear, currentMonth);
   makecalerderInstance();
   $('#start-date').val(yyyymmdd(currentYear, currentMonth+1, today.getDate()));
+  retinaCheck = window.devicePixelRatio;
+  console.log("Retina check result: "+retinaCheck);
+  if (retinaCheck >= 1) {
+    console.log("This is Retina Display.");
+  } else {
+    console.log("This is not Retina.");
+  }
 });
 
 /***************************************************************************************
@@ -240,14 +247,9 @@ function degitalViewUpdate() {
 // アナログ時計の表示を更新（参考：http://myprogramming.hatenablog.com/entry/2017/06/25/195248）
 function clockViewUpdate(hour = sim_instance.sim_hour, minute = sim_instance.sim_minute) {
     // アナログ時計の更新
-    /*var hourInst = document.getElementById("hour");
-    var minuteInst = document.getElementById("minute");
-    //var second = document.getElementById("second");
-    hourInst.style.transform = "rotate("+(hour*30 + minute*0.5)+"deg)";
-    minuteInst.style.transform = "rotate("+(minute*6)+"deg)";
-    //second.style.transform = "rotate("+(time.getSeconds()*6)+"deg)";*/
-    $("#hour").css("transform", "rotate("+(hour*30 + minute*0.5)+"deg)");
-    $("#minute").css("transform", "rotate("+(minute*6)+"deg)");
+    loc = " translate(-50%, 0%)"
+    $("#hour").css("transform", loc+"rotate("+(hour*30 + minute*0.5)+"deg)");
+    $("#minute").css("transform", loc+"rotate("+(minute*6)+"deg)");
     // $('#second').css("transform", "rotate("+(time.getSeconds()*6)+"deg)");
 }
 
